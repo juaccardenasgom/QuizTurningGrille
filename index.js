@@ -97,6 +97,7 @@ var angle = 0;
 function setup() {
 
 	createCanvas(1440, 1000);
+  cursor('grab')
 
 
     grid = []
