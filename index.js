@@ -1,567 +1,539 @@
-var img,im1,im2,im3,logo;
-var currentStage = "intro",count = 0;
-var stagesNames = [];
-var stagesBools = [];
-var number1=0,number2=0;
-var enterPressed  = false;
-var terminalX=50,terminalY=50,padding=50;
-var currentInput = 0,currentDecision = 0;
-var terminalInput = ["El material que va a ver a continuación puede ser traumático para algunas personas. Favor tener discreción.",
-              "En este juego usted será la doctora a cargo de salvar el mundo.",
-              "(Agente P) Buenos días, doctora.",
-              "(Agente P) Nos alegra contar con su presencia el día de hoy.",
-              "(Agente P) Como ya debe ser de su conocimiento, hace algunos meses el gobierno ha trabajado en una nueva tecnología dental con el fin de evitar que capturen a los espías colombianos y logren sacar información preciada de la nación.",
-              "(Agente P) El dispositivo es colocado en los dientes del espía y consta de un agente explosivo que no solo causa muerte instantánea en el portador sino también logra un daño en un rango de 500 metros a la redonda.",
-              "(Agente P) Sin embargo, algo salió mal con el experimento, los primeros agentes en ser intervenidos han presentado síntomas de perdida de conocimiento, ataques violentos contra sus compañeros y canibalismo.",
-              "(Agente P) Es importante que retire los dispositivos y realice un tratamiento endodóntico para no dejar ningún rastro del material en los espías...",
-              "(Agente P) Usted hará parte de un grupo de trabajo especializado. Por ahora su misión, si decide aceptarla, es hacer la apertura y localización de conductos.",
-              "(Agente P) ¿Qué opina doctora?",
-              "(Agente P) Pero recuerde, cualquier error en el tratamiento puede llevar a la muerte de su paciente y por consiguiente a la suya...",
-              "CASO #1",
-              "Se presenta en el consultorio una mujer joven de 20 años a la que se le implantó el dispositivo en un 26.",
-              "La cavidad de acceso debe tener una forma:",
-              "¿Que N° de fresa debería utilizar al momento de abrir la cámara pulpar del 16?",
-              "La dirección en la que va dirigida la fresa no puede ser:",
-              "(Agente P) Muy bien doctora, ha superado su primer caso.",
-              "(Agente P) Por el momento, la seguimos necesitando así que no necesita temer por su vida.",
-              "(Agente P) ¿Quiere continuar con el siguiente caso?",
-              "CASO #2",
-              "Se presenta al consultorio un agente de 24 años que no recuerda muy bien si ya le colocaron el dispositivo o solo le hicieron una resina en un 14.",
-              "Según sus conocimientos, ¿cuál es el paso a seguir?",
-              "En la radiografía encuentras que efectivamente el paciente  tiene el dispositivo.",
-              "¿Comó se debe realizar la apertura?",
-              "(Agente P) Haz realizado de manera correcta la apertura del diente ahora necesitas utilizar la fresa redonda a baja velocidad para extender la cavidad en sentido…",
-              "(Agente P) Muy bien doctora, continuemos…",
-              "CASO #3",
-              "Se presenta en el consultorio un paciente con un dispositivo defectuoso y explotó sin ser activado.",
-              "Sin embargo, no tenía la cantidad necesaria de detonate, así que dejó apenas una cavidad en el diente 43.",
-              "Con esta destrucción coronal, ¿Qué referencias anatómicas se pueden tener en cuenta?",
-              "[3 semanas despúes] Luego de haber desintalado otros 20 dispositivos",
-              "(Agente P) La felicito doctora por haber hecho tan buena labor, ahora que ha desinstalado gran parte de los dispositivos la Dirección De Inteligencia Nacional, puede continuar con sus labores",
-              "Te dan una medalla por tu gran labor…",
-              "Pero no puedes compartirlo con nadie por qué es un asunto confidencial",
-              "Según el gobierno esto nunca pasó",
-              "Continuará...",
-              ""
-            ];
-var decisionInput = ["(Agente P) ¿Qué opina doctora?",
-                    "La cavidad de acceso debe tener una forma:",
-                    "¿Que N° de fresa debería utilizar al momento de abrir la cámara pulpar del 16?",
-                    "La dirección en la que va dirigida la fresa no puede ser:",
-                    "(Agente P) ¿Quiere continuar con el siguiente caso?",
-                    "Según sus conocimientos, ¿cuál es el paso a seguir?",
-                    "¿Comó se debe realizar la apertura?",
-                    "(Agente P) Haz realizado de manera correcta la apertura del diente ahora necesitas utilizar la fresa redonda a baja velocidad para extender la cavidad en sentido…",
-                    "Con esta destrucción coronal, ¿Qué referencias anatómicas se pueden tener en cuenta?",
+const N = 4
 
+const questions = [
+    {
+                 b:"USA",
+                 a: "NSA", 
+                 c: "CIA", 
+                 d: "BMW",  
+                 value : true, 
+                 r_value: true,
+                 done: false, 
+                 question : "¿Cuál era el nombre del bote del señor Ellison y Oracle?" ,
+                 color: "#540d6e"
+    },
+    {
+                 a: "Organización del trabajo",
+                 b: "Coordinación del trabajo, información y conocimiento", 
+                 c: "Requerimientos para un producto valioso", 
+                 d: "Procedimientos lógicos de transacciones rutinarias",  
+                 value : true, 
+                 r_value: true,
+                 done: false, 
+                 question : "¿Cuál NO es una definición de proceso de negocio?" ,
+                 color: "#d00000"
+    },
+    {
+                 d: "Un conjunto de procesos de negocio",
+                 b: "Un conjunto de funciones", 
+                 c: "Un conjunto de productos", 
+                 a: "Un conjunto de señores y señoras",  
+                 value : true, 
+                 r_value: true,
+                 done: false, 
+                 question : "Con base en la presentación, una empresa puede verse como:" ,
+                 color:"#ffba08"
+    },
+    {
+                 a:"Manufactura",
+                 b: "Ventas", 
+                 d: "Contabilidad", 
+                 c: "Recursos Organizacionales",  
+                 value : true, 
+                 r_value: true,
+                 done: false, 
+                 question : "Seleccione la opción que no sea un área funcional:" ,
+                 color:"#3f88c5"
+    },
+    {
+                 a:"Se enfocan en problemas que son únicos y estáticos",
+                 b: "Están dirigidos a gerentes de nivel superior", 
+                 d: "Prescinde de los TPS", 
+                 c: "Usa información de TPS, MIS y fuentes externas",  
+                 value : true, 
+                 r_value: true,
+                 done: false, 
+                 question : "¿Cuál de las siguientes opciones es una carácteristica de los DSS (Sistemas de Soporte de Decisiones)?" ,
+                 color:"#ea638c"
+    },
+    {
+                a:"Apple",
+                 b: "Intrawest", 
+                 d: "Leiner Health Products", 
+                 c: "Procter & Gamble",  
+                 value : true, 
+                 r_value: true,
+                 done: false, 
+                 question : "¿Qué compañia tiene un ESS que muestra la información en tiempo real?" ,
+                 color: "#d84a05"
+    },
+    {
+                 a:"Ambas son falsas.",
+                 c: "(I) es falsa y (II) es verdadera.", 
+                 b: "(I) es verdadera y (II) es falsa.", 
+                 d: "Ambas son verdaderas.",  
+                 value : true, 
+                 r_value: true,
+                 done: false, 
+                 question : "(I) Los procesos de negocios abarcan una y solo un área funcional, y (II) Los procesos de negocios son una medida de calidad de las empresas." ,
+                 color: "#eca400"
+    },
+    {
+                 a: "Sistema de producción de transacciones",
+                 b: "Sistema de planificación de transacciones", 
+                 c: "Sistema de transacciones procesales", 
+                 d: "Sistema de procesamiento de transacciones",  
+                 value : true, 
+                 r_value: true,
+                 done: false, 
+                 question : "Según la exposición: ¿Qué significan las siglas TPS en castellano?" ,
+                 color: "#01baef"
+    }
+]
 
+var s, grid, awidth, awidth, offset, currentQ, currentG, state, fontSize, currentH, rotation, turns;
+var angle = 0;
 
-                    ""];
-var gameOverInput = ["Lo hiciste mal","Pero terriblemente mal","Jorribol","@"];
-var gameOverAlternatives = [["Lo hiciste mal","Pero terriblemente mal","Jorribol","@"],
-                            ["No puede abandonarnos en este momento, tiene mucha información.","@"],
-                            ["(Agente P) Noooo! el paciente no tenía el dispositivo.","El paciente comienza a sangrar de forma exagerada, descubres que tenía la pulpa viva", "El paciente estaba anticoagulado","No puedes parar la hemorragia","El paciente muere desangrado","@"],
-                            ["(Agente P) Eres una inútil.", "El gobierno no tiene compasión de ti y decide encerrarte en una celda de máxima seguridad por traición.","@"],
-                            ["(Agente P) Haz hecho mal la apertura , por lo tanto no se logran ver los dos conductos radiculares.","(Agente P) Mereces morir. jaja bueno no es para tanto por favor estudia la anatomia y la apertura de premolares","En realidad el Agente P solo estaba intentando ser un buen tipo. Cuando su superior se entera, lo echa de la agencia. Por lo tanto tú que eres su subordinada también quedas sin trabajo.","Ahora el es un indigente y todo es por tu culpa.","@"],
-                            ["Ohh no has extendido la cavidad de forma errónea","Dejaste una zona de la corona muy delgada y se ha fracturado","La intervención se complicó y el paciente no dejó que siguieras trabajando en él.","Tus superiores están muy decepcionados y creen que ya no mereces hacer parte del equipo.","@"]
-                          ];
-var gameOverTextAlternative = 0;
-var decisiones = [["Acepto","No, mejor no."],
-                  ["Triangular","Cuadrada","Romboidal"],
-                  ["2","3","4"],
-                  ["Palatino", "Distovestibular", "Mesiovestibular"],
-                  ["¡No! ¿Ya me puedo ir?.","Claro… Me gusta la adrenalina.","Pues sí."],
-                  ["Realizar una apertura inicial en la fosa central.","Tomar una radiografía periapical del 14","No lo sé... No soy científica."],
-                  ["Vestibulolingual","Mesiodistal","Distovestibular"],
-                  ["Margen gingival y la unión amelocementaria","Conductos radiculares.","No lo sé."]
-                ];
-
-var correctas = [["Acepto"],
-                ["Romboidal"],
-                ["3"],
-                ["Distovestibular"],
-                ["Pues sí.","Claro… Me gusta la adrenalina."],
-                ["Tomar una radiografía periapical del 14"],
-                ["Vestibulolingual"],
-                ["Margen gingival y la unión amelocementaria"]
-              ];
-
-var textCounter = 0;
-var test = false;
-const INIT_TIME = Date.now()
-var youGood = false;
-var currentPregunta = 0;
-var once=false,once2=false;
-var elegida = "";
-var gameOverMessage = "";
-
-
-//PRELOAD
-function preload(){
-  img = loadImage("Zombie_Jake.png");
-  im1 = loadImage("1.png");
-  im2 = loadImage("2.png");
-  im3 = loadImage("3.png");
-  logo = loadImage("logo.png");
-
-}
-let time = ""
-//SETUP
 function setup() {
-  stagesNames.push("intro");
-  stagesNames.push("terminal1");
-  stagesNames.push("decision1");
-  stagesNames.push("gameOver")
 
-  time = hour()+":"+minute()+":"+second()
+	createCanvas(1440, 1000);
 
 
-  for (var i = 0; i < stagesNames.length; i++) {
-    stagesBools.push(false);
-  }
+    grid = []
+    awidth  =   width < height ? width: height;
+    awidth*=0.35 
+    offset = width - awidth
+    yoffset = offset*0.3;
+    
+    s = awidth/N;
+    currentQ = 0;   
+    currentG = 0;
+    currentH = 0;
+    state = 'start'
+    fontSize = 150/N;
+    colorMode(HSB);
 
-  stagesBools[0]=true;
-
-  console.log(stagesNames,stagesBools);
-  createCanvas(windowWidth, windowHeight);
-}
-
-//DRAW
-function draw() {
-  // console.log((Date.now()-INIT_TIME)/1000);
-  // showScreen();
-  showYouWin();
-}
-
-showYouWin = () => {
-  push();
-  background(random(255),random(255),random(255))
-  frameRate(1)
-  fill(random(255),random(255),random(255))
-  textSize(150)
-  textAlign(CENTER)
-  textFont('IM Fell DW Pica');
-  text(`¡GANASTE!\n${time}`,windowWidth/2,windowHeight/2)
-  pop();
-}
-
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight-5);
-}
-
-
-//SHOW FUNCTIONS
-function showScreen(){
-  if(currentInput >= 31){
-    youGood = true;
-  }
-
-  switch (terminalInput[currentInput]) {
-    case "(Agente P) ¿Quiere continuar con el siguiente caso?":
-      gameOverTextAlternative = 1;
-      break;
-    case "Según sus conocimientos, ¿cuál es el paso a seguir?":
-      if(elegida == "Realizar una apertura inicial en la fosa central."){
-        gameOverTextAlternative = 2;
-      }else{
-        gameOverTextAlternative = 3;
-      }
-      break;
-    case "¿Comó se debe realizar la apertura?":
-      gameOverTextAlternative = 4;
-      break;
-    case "(Agente P) Haz realizado de manera correcta la apertura del diente ahora necesitas utilizar la fresa redonda a baja velocidad para extender la cavidad en sentido…":
-      gameOverTextAlternative = 5;
-      break;
-    default:
-      //NOTHING
-
-  }
-
-  switch (currentStage) {
-    case "intro":
-      showIntro();
-      break;
-    case "terminal":
-      if(decisionInput.indexOf(terminalInput[currentInput]) != -1 && currentStage != "decision"){
-
-        if (terminalInput[currentInput] != "¿Comó se debe realizar la apertura?"){
-          currentStage = "decision";
-        }else{
-          currentStage = "decisionImagen";
-        }
-      }else {
-        showTerminal();
-      }
-      break;
-    case "decision":
-      showDecision();
-      break;
-    case "decisionImagen":
-      //DO IMAGE STUFF
-      showDecisionImagen();
-      break;
-    case "gameOver":
-      showGameOver();
-      break;
-    default:
-
-  }
-}
-
-//Intro
-function showIntro(){
-  background("#3A473C");
-
-  push();
-    imageMode(CENTER);
-
-    push();
-     textSize(100);
-     fill("#CFE0C3");
-     textAlign(CENTER);
-     textFont('IM Fell DW Pica');
-     var ss = "ME DUELE UN DIENTE";
-     text(ss,windowWidth/2, windowHeight/2 - img.height/5);
-    pop();
-
-    if(randomTint()){
-      tint(255,0,0);
-      image(img,(windowWidth/2)+Math.floor(Math.random()*(30)),(windowHeight/2) + Math.floor(Math.random()*(30)),img.width/5, img.height/5);
-      tint(0,255,255);
-      image(img,(windowWidth/2)+Math.floor(Math.random()*(30)*(Math.random()-1)),(windowHeight/2) + Math.floor(Math.random()*(30)*(Math.random()-1)),img.width/5, img.height/5);
-    }else {
-      image(img,windowWidth/2,windowHeight/2,img.width/5, img.height/5);
+    for (let i = 0; i < N; i++) {
+        grid.push([]);
+        for (let j = 0; j < N; j++) {
+            console.log ( {a: floor((i + j*N) /2 ) , e: questions[ floor((i + j*N) /2 ) ] })
+            grid[i].push( JSON.parse(JSON.stringify(questions[ floor((i + j*N) /2 ) ])));
+        }    
     }
-
-    push();
-     textSize(70);
-     fill(255);
-     textAlign(CENTER);
-     textFont('VT323');
-     var s = "Presione ENTER para continuar";
-     if(randomType() && count == 5){
-       count = 0;
-       text(s,windowWidth/2,windowHeight/2+img.height/5);
-     }else{
-       text("> "+s,windowWidth/2,windowHeight/2+img.height/5);
-     }
-    pop();
-  pop();
-
-  showTooth();
-
-  if (enterPressed) {
-    enterPressed=false;
-    currentStage = "terminal";
-  }
-}
-
-//Terminal1
-function showTerminal(){
-  background(50);
-
-  push();
-    fill(0)
-    rect(terminalX, terminalY, windowWidth-120, windowHeight-120, 20);
-  pop();
-
-
-  push();
-    textSize(60);
-    fill("#1EC503");
-    textAlign(LEFT);
-    textFont('VT323');
-    if(randomType() && count == 5){
-      count = 0;
-      text(storyText() + showPuntero(),terminalX+padding+random(padding),terminalY+padding+10, windowWidth-180, windowHeight-120);
-    }else{
-      text("> " + storyText() + showPuntero(),terminalX+padding,terminalY+padding+10, windowWidth-180, windowHeight-120);
-    }
-  pop();
-
-
-  showTooth();
-
-  //Restablecer onces
-  once = false;
-  once2 = false;
-
-  if(terminalInput[currentInput]==""){
-    currentStage="gameOver";
-  }
+    colorMode(RGB); 
+    textAlign(CENTER,CENTER);
+    textFont('Trebuchet MS');
+    textSize(150/N);
+    angleMode(DEGREES);
+    frameRate(30);
 
 }
 
-function showDecision(){
-  background("#334D4A");
+var alldone = false;
 
-  push();
-    fill(0)
-    rect(terminalX, terminalY, windowWidth-120, windowHeight-120, 20);
-  pop();
-  push();
-    textSize(60);
-    fill("#1EC503");
-    textAlign(LEFT);
-    textFont('VT323');
+function quizzGrid(){
 
-
-    text("> " + storyText(),terminalX+padding,terminalY+padding+10, windowWidth-180, windowHeight-120);
-
-
-    //DECISIONES
-    for(i = 0; i<decisiones[currentDecision].length; i++){
-
-      posX = (terminalX+padding) + (((windowWidth-180)/decisiones[currentDecision].length) * (i));
-      posY = terminalY+padding+50 + windowHeight/4;
-      widthX = (((windowWidth-180)/decisiones[currentDecision].length));
-      heightY = windowHeight - (terminalY+padding+10 + windowHeight/3)
-
-      isOver = mouseX >= posX && mouseX <= posX + widthX;
-
-      if(isOver){
-        elegida = decisiones[currentDecision][i];
-        fill(255);
-      }else{
-        fill("#1EC503");
-      }
-
-      text("> "+decisiones[currentDecision][i], posX, posY, widthX, heightY )
-    }
-  pop();
-
-  showTooth();
-
-}
-
-function showDecisionImagen(){
-  background("#334D4A");
-
-  push();
-    fill(0)
-    rect(terminalX, terminalY, windowWidth-120, windowHeight-120, 20);
-  pop();
-  push();
-    textSize(60);
-    fill("#1EC503");
-    textAlign(LEFT);
-    textFont('VT323');
-
-
-    text("> " + storyText(),terminalX+padding,terminalY+padding+10, windowWidth-180, windowHeight-120);
-
-
-    //DECISIONES
-    for(i = 0; i<3; i++){
-
-      posX = (terminalX+padding) + (((windowWidth-180)/3) * (i))-10;
-      posY = terminalY+padding+10 + windowHeight/4 - 50;
-      widthX = (((windowWidth-180)/3));
-      heightY = windowHeight - (terminalY+padding+10 + windowHeight/3)
-
-      isOver = mouseX >= posX && mouseX <= posX + widthX;
-
-      if(isOver){
-        elegida = ""+i;
-        tint(200);
-      }else{
-        noTint();
-      }
-
-      if(i == 0){
-        image(im1, posX, posY, im1.width*(widthX/im1.width)-10, im1.height*(heightY/im1.height)-10)
-      }else if(i == 1){
-        image(im2, posX, posY, im1.width*(widthX/im1.width)-10, im1.height*(heightY/im1.height)-10)
-      }else{
-        image(im3, posX, posY, im1.width*(widthX/im1.width)-10, im1.height*(heightY/im1.height)-10)
-      }
-
-    }
-  pop();
-
-  showTooth();
-
-}
-
-var gameOverTextCounter = 0;
-
-function showGameOver(){
-  if(youGood){
-    background("black");
-    push();
-     textSize(70);
-     fill("white");
-     textAlign(CENTER);
-     textFont('VT323');
-     var s = "Buen trabajo, doctora" + showPuntero();
-     text(s,windowWidth/2,windowHeight/2);
-    pop();
-  }else{
-    gameOverInput = gameOverAlternatives[gameOverTextAlternative];
-    background("black");
-    push();
-     textSize(100);
-     fill("red");
-     textAlign(CENTER);
-     textFont('VT323');
-
-     var s = "GAME OVER";
-     var s2 = gameOverInput[gameOverTextCounter];
-
-     if(s2=="@"){
-       s2="";
-     }
-
-
-     if(randomType() && count == 5){
-       count = 0;
-       text(s,windowWidth/2 + random(100)*(random(2)-1), windowHeight/3 + random(100)*(random(2)-1));
-       push();
-         textSize(50);
-         text(s2,windowWidth/2 + random(100)*(random(2)-1), windowHeight/2 + random(100)*(random(2)-1) + 50, windowWidth/2,windowHeight);
-       pop();
-     }else{
-       text(s,windowWidth/2,windowHeight/3);
-       push();
-         textSize(50);
-         text(s2,windowWidth/4,windowHeight/2, windowWidth/2,windowHeight);
-       pop();
-     }
-
-
-     imageMode(CENTER);
-
-     image(logo,windowWidth/2,windowHeight - windowHeight/6 + 80,logo.width/5,logo.height/5);
-     push();
-     textSize(40);
-      fill("white")
-      textAlign(CENTER);
-       text("@Carolina Cárdenas, Estudiante de Odontología",windowWidth/2, windowHeight-windowHeight/6 );
-     pop();
-
-     if(enterPressed && s2!=""){
-       enterPressed=false;
-       gameOverTextCounter++;
-     }
-
-    pop();
-  }
-}
-
-
-//OTHER FUNCTIONS
-function randomTint(){
-  number1 = Math.floor(Math.random() * (20 - 1) + 1);
-  return number1 == 5;
-}
-
-function randomType(){
-  number2 = Math.floor(Math.random() * (20 - 1) + 1);
-  if(number2 == 5)count++;
-  return number2 == 5;
-}
-
-function keyTyped() {
-  if (key === 's') {
-    console.log("Current Stage: " + currentStage);
-  } else if (key === 'i') {
-    console.log("Current Input: " + currentInput);
-  }
-}
-
-function keyPressed() {
-  if (keyCode === ENTER && currentStage != "decision") {
-    enterPressed = true;
-  }
-}
-
-function showTooth(){
-  push();
-    if (mouseIsPressed) {
-      fill(random(60,70));
-    } else {
-      fill(255);
-    }
+    translate(0.5*offset, 0.5*yoffset);
+    background(0);
+    translate(awidth/2 , awidth/2 )
     noStroke();
-    ellipse(mouseX-4, mouseY, 20, 20);
-    ellipse(mouseX+4, mouseY, 20, 20)
-    ellipse(mouseX-6, mouseY+20, 10, 40);
-    ellipse(mouseX+6, mouseY+20, 10, 40);
-  pop();
-}
 
-function storyText(){
-  let auxText = terminalInput[currentInput];
-  textCounter++;
+    alldone = true;
+     let group = 2* floor(( currentQ)/2  ),
+        groupX = group % N,
+        groupY = floor(group/N);
+    
 
-  if(enterPressed && currentStage != "decision") {
-    enterPressed=false;
-    textCounter=0;
-    currentInput++;
-  }
+    for (let i = 0; i < grid.length; i++) {
+        for (let j = 0; j < grid.length; j++) {
+            fill(grid[i][j].value ? color(255) : color(0)); 
+            colorMode(HSB);
+            fill(grid[ i ][j].color);
+            colorMode(RGB);
+            noStroke();
+            rect(i*s - awidth/2 - 1, j*s - awidth/2 -1, s + 1, s + 1);  
+            
+            if (grid[i][j].done ){
+                fill(grid[i][j].value ? 255: 0);
+                push()
+                rectMode(CENTER);
+                rect(i*s - awidth/2 + s/2, j*s - awidth/2 + s/2, 0.6*s, 0.6*s, 12);  
+                pop();
+                
+            } else{
 
-  if(auxText==undefined){
-    return "";
-  }
+                alldone = false;
+            }
+            fill(0);
 
-  return auxText.substring(0,textCounter);
-}
-
-function showPuntero(){
-  //console.log(((Date.now()-INIT_TIME)/1000) % 1.2);
-  if( ((Date.now()-INIT_TIME)/1000) % 1.5 >= 0.5){
-    //INIT_TIME = Date.now();
-    return "|";
-  }else{
-    return "";
-  }
-}
-
-function runOnce(boolean){
-  const pregunta = currentPregunta;
-  boolean = true;
-
-  if( correctas[pregunta] == elegida ){
-    // console.log("from: "+ terminalInput[currentInput] + " -> " + terminalInput[currentInput+1]);
-    currentInput++;
-    currentPregunta++;
-    currentDecision++;
-    // once=false;
-
-  }else{
-    console.log("Pregunta #"+pregunta, elegida, correctas[pregunta]);
-    currentStage = "gameOver";
-  }
-}
-
-function mouseClicked() {
-  if (currentStage == "decision") {
-    const pregunta = currentPregunta;
-
-    if( correctas[pregunta].indexOf(elegida) != -1 ){
-      currentStage = "terminal"
-      currentInput++;
-      currentPregunta++;
-      currentDecision++;
-    }else{
-      console.log("Pregunta MALA. BUENA: "+correctas[pregunta]);
-      gameOverInput =
-      currentStage = "gameOver";
+            
+            
+            //text(   2* floor(( i + N* j)/2  )   , s/2 + i*s - awidth/2, s/2 + j*s - awidth/2);   
+            
+        }
     }
-  }else if (currentStage == "decisionImagen") {
-    const pregunta = currentPregunta;
 
-    if( elegida == "0" ){
-      currentStage = "terminal"
-      currentInput++;
-      // currentPregunta++;
-      // currentDecision++;
-    }else{
-      console.log("Pregunta MALA. BUENA: "+0);
-      currentStage = "gameOver";
+
+   
+    push();
+    noFill();
+    stroke(0);
+    strokeWeight(5);
+
+
+    pop();
+
+    
+    translate(-awidth/2 - 0.5*offset, -awidth/2 - 0.5*yoffset)
+    
+
+    
+        if(mouseX > 0.5*offset &&
+           mouseX <awidth + 0.5*offset &&
+           mouseY > 0.5*yoffset &&
+            mouseY <awidth + 0.5*yoffset){
+
+            let x = mouseX - (mouseX - 0.5*offset) % s;
+            let y = mouseY - (mouseY - 0.5*yoffset) % s;     
+            noStroke();
+            fill(0, 50);            
+            rect(x-1, y-1, s+1,s+1);
+        }
+
+    
+
+    var ds = awidth/6;
+
+    
+    textSize(24);
+    fill(255);
+    push();
+    text(grid[ groupX ][groupY].question , offset/4, 0, awidth + offset/2, 0.5*yoffset) ;
+     colorMode(HSB); 
+
+    fill(grid[ groupX ][groupY].color);
+     ellipse(0 , 0, 200,200);
+     
+     
+     fill(0);
+      textSize(60);
+     text((0.5*group + 1), 0, 0, 100, 100);
+     
+    textSize(20);
+    fill(grid[ groupX ][groupY].color );
+    
+
+    rect(0, yoffset*0.75 + awidth, width, height - yoffset - awidth  )
+        
+    fill(0);
+    ellipseMode(CORNER)
+    ellipse(awidth/6, yoffset*0.85 + awidth, awidth/4,awidth/4 ) //A-------------
+
+    
+    rect(awidth/2 , yoffset*0.85 + awidth , awidth*1.5, awidth/4 , 12 );
+    fill(255);
+    text(  grid[ currentQ % N ][floor(currentQ/N)].a, awidth/2 , yoffset*0.85 + awidth , awidth*1.5, awidth/4 , 12 );  
+
+fill(0);
+    ellipse(awidth/6,   yoffset*1.25 + awidth,   awidth/4,   awidth/4) //B-------------       
+    fill(255);
+    arc(awidth/6,   yoffset*1.25 + awidth,   awidth/4,   awidth/4  ,-90, 90  ) //B-------------
+    fill(0);
+    rect(awidth/2 , yoffset*1.25 + awidth , awidth*1.5, awidth/4, 12  );
+    fill(255);
+    text(  grid[ currentQ % N ][floor(currentQ/N)].b, awidth/2 ,yoffset*1.25 + awidth , awidth*1.5, awidth/4, 12  );
+
+
+    ellipse(-awidth/6 + width - awidth/4, yoffset*0.85 + awidth, awidth/4,awidth/4 ) //C-------------
+    fill(0);
+    arc(-awidth/6 + width - awidth/4, yoffset*0.85 + awidth, awidth/4,awidth/4, -90, 90 ) //C-------------
+
+    rect( width - awidth/2 - awidth*1.5, yoffset*0.85 + awidth , awidth*1.5, awidth/4, 12 );
+    fill(255);
+    text(  grid[ currentQ % N ][floor(currentQ/N)].c ,  width - awidth/2 - awidth*1.5, yoffset*0.85 + awidth , awidth*1.5, awidth/4, 12 ); 
+
+
+    fill(255);
+    ellipse(-awidth/6 + width - awidth/4, yoffset*1.25 + awidth, awidth/4,awidth/4) //D-------------
+
+
+    fill(0);
+    rect( width - awidth/2 -awidth*1.5, yoffset*1.25 + awidth , awidth*1.5, awidth/4 , 12 );
+    fill(255);
+    text(  grid[ currentQ % N ][floor(currentQ/N)].d   ,width - awidth/2 -awidth*1.5, yoffset*1.25 + awidth , awidth*1.5, awidth/4 , 12 );
+
+    pop();    
+    
+    
+    if(alldone){
+        fill(0,255,0,150);
+        rect(width - awidth/2, -awidth/4, awidth,awidth/2, 20);
+        fill(17);
+        text("¡YA!", width - awidth/2, 0, awidth/2,awidth/4);
+
     }
-  }
+       
+
+
+
 }
 
-// function moveS
+
+
+
+
+function mousePressed(){
+    
+    if (state == 'quiz'){
+        console.log(alldone)
+        let x = -offset*0.5 + mouseX - (mouseX - 0.5*offset) % s;
+        let y = -yoffset*0.5 + mouseY - (mouseY - 0.5*yoffset) % s;
+        
+            if(mouseX > 0.5*offset && mouseX <awidth + 0.5*offset && mouseY > 0.5*yoffset && mouseY <awidth + 0.5*yoffset){
+                let g = floor(round(x/s+ y/s*N)/2);
+                currentQ = round(x/s+ y/s*N);
+                if(currentG != g  ){
+                     //&& currentQ != 2*floor(round(x/s+ y/s*N)/2)
+                    currentG = g
+                    
+
+                    
+                }                
+                else {
+                    grid[ currentQ % N ][floor(currentQ/N)].value = !grid[ currentQ % N ][floor(currentQ/N)].value;    
+                    grid[ currentQ % N ][floor(currentQ/N)].done = true;
+                }
+                
+            }
+        let ds = awidth/6
+        let tx  = 2*ds,
+        ty  = 3*ds + 0.5*yoffset + awidth,
+        txf = awidth* 0.5  + offset*0.5 - ds/2,
+        tyf = 3*ds + 0.5*yoffset + awidth*1.25,     
+        fx = ds/2 + awidth* 0.5 + offset*0.5 ,
+        fy =  3*ds + 0.5*yoffset + awidth, 
+        fxf = awidth - 2*ds + offset, 
+        fyf = 3*ds + 0.5*yoffset + awidth*1.25;
+        
+
+        if(mouseX > tx && mouseX < txf && mouseY > ty && mouseY < tyf ){
+            
+            grid[ currentQ % N ][floor(currentQ/N)].value = false;
+            grid[ currentQ % N ][floor(currentQ/N)].done = true;
+            
+        }
+        if(mouseX > fx && mouseX < fxf && mouseY > fy && mouseY < fyf ){
+
+            grid[ currentQ % N ][floor(currentQ/N)].value = true;
+            grid[ currentQ % N ][floor(currentQ/N)].done = true;
+        }
+        
+
+        let ax = width - awidth/2, ay = -awidth/4, bx = ax + awidth, by = ay + awidth/2;
+        if(alldone && mouseX > ax && mouseX < bx && mouseY > ay && mouseY < by ){
+
+            console.log("AQUI")
+            state = 'message';
+            currentH = -1;
+            turns = 3;
+            plaintext = ""
+
+        }
+        
+
+
+
+    }else if(state == 'stand'){
+        //state = 'rotate';
+
+        let ax = width - awidth/2, ay = -awidth/4, bx =  ax + awidth, by = ay + awidth/2;
+        if(mouseX > ax && mouseX < bx && mouseY > ay && mouseY < by ){
+
+
+            state = 'quiz'
+        }
+        
+
+    }
+    
+    
+}
+
+
+var message ="blkCr3XiPty/2. r"
+var plaintext = "";
+
+var clockwise = false;
+
+function cipheredMessage(){
+    
+background(0);
+        fill(255,255,50,150);
+        rect(width - awidth/2, -awidth/4, awidth,awidth/2, 20);
+        fill(17);
+        text("¿YA?", width - awidth/2, 0, awidth/2,awidth/4);
+    translate(0.5*offset , 0.5*yoffset )
+   
+    
+    let limit = false;
+    let log =[]
+
+    if(state == 'message'){
+        for (var is = 0; is< grid.length; is++){
+            for (var js = 0 ; js< grid.length; js++){
+                ir = is
+                jr = js
+                let t = 3 - turns
+                while(t-->0){
+                    if(clockwise){
+                        let temp = ir;
+                        ir = jr;
+                        jr = N-1-temp
+
+                    }else{
+                        let temp = ir;
+                        ir = N - 1- jr;
+                        jr = temp
+
+
+
+                    }
+             
+                }
+                console.log({is,js, ir,jr})
+                grid[is][js].r_value = grid[ir][jr].value
+            }
+        }
+    }
+
+
+
+
+    for (let j = 0; j < grid.length; j++) {
+        for (let i = 0; i < grid.length; i++) {
+            
+            fill(51, 200);
+            rect(i*s, j*s, s, s);
+            
+            fill(0);
+            c = message.length > i + j*N ? message[    i + j*N  ] : ''
+            
+            
+            
+
+            if(state == 'message'){
+                if(!limit){               
+                    fill(255,255,0);
+                }
+
+                if( !limit && !grid[i][j].r_value && i + j*N > currentH  && currentH != N*N - 1) {
+                    currentH = i + j*N;
+                    limit = true;
+                    plaintext= plaintext  + c;
+                }
+            
+            }
+            
+           
+            text(c, i*s + s/2, j*s + s/2);
+            
+            
+        }
+    }    
+
+
+
+    if( state == 'message' && !limit) {
+        state = 'rotate';
+        rotation = 90;
+        
+
+    }
+
+    noStroke();
+    
+    
+    fill(255);
+
+
+    text( plaintext, 0, awidth, awidth, awidth/2);
+
+    translate(awidth/2 , awidth/2 );
+    
+
+
+    if(state == 'rotate'){
+
+        clockwise? angle+=2 : angle-=2;
+        rotation-=2;
+
+        if(rotation == 0){
+
+            angle = angle % 360;
+            state = 'message'
+            currentH = -1;
+            
+            if(turns-- == 0) {
+                
+                state = 'stand';
+                
+            }
+
+        }
+
+    }
+
+
+    rotate(angle);
+
+    noFill();
+    stroke(255);
+    rect(-awidth/2,-awidth/2,awidth,awidth);
+    noStroke();
+
+    fill(255,50);
+
+
+
+    for (let i = 0; i < grid.length; i++) {
+        for (let j = 0; j < grid.length; j++) {
+            if(grid[i][j].value){
+                rect(i*s - awidth/2, j*s - awidth/2, s, s);
+            }        
+        }
+    }   
+
+
+
+}
+
+
+function draw() {
+    console.log(state);
+    
+    switch(state){
+
+        case('start'):
+            state = 'quiz'
+
+            break;
+        
+        case('quiz'):
+            quizzGrid();    
+            break;
+
+        case('message'):
+        case("rotate"):
+            cipheredMessage();            
+
+            break;
+
+        case("stand"):
+        break;
+        //jojo pose
+
+
+
+        
+    }
+}
