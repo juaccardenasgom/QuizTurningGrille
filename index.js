@@ -105,13 +105,15 @@ function preload(){
   logo = loadImage("logo.png");
 
 }
-
+let time = ""
 //SETUP
 function setup() {
   stagesNames.push("intro");
   stagesNames.push("terminal1");
   stagesNames.push("decision1");
   stagesNames.push("gameOver")
+
+  time = hour()+":"+minute()+":"+second()
 
 
   for (var i = 0; i < stagesNames.length; i++) {
@@ -121,13 +123,26 @@ function setup() {
   stagesBools[0]=true;
 
   console.log(stagesNames,stagesBools);
-  createCanvas(windowWidth, windowHeight-5);
+  createCanvas(windowWidth, windowHeight);
 }
 
 //DRAW
 function draw() {
   // console.log((Date.now()-INIT_TIME)/1000);
-  showScreen();
+  // showScreen();
+  showYouWin();
+}
+
+showYouWin = () => {
+  push();
+  background(random(255),random(255),random(255))
+  frameRate(1)
+  fill(random(255),random(255),random(255))
+  textSize(150)
+  textAlign(CENTER)
+  textFont('IM Fell DW Pica');
+  text(`¡GANASTE!\n${time}`,windowWidth/2,windowHeight/2)
+  pop();
 }
 
 function windowResized() {
