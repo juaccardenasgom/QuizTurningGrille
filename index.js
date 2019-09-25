@@ -361,7 +361,7 @@ function mousePressed(){
 }
 
 
-var message ="blkCr3XiPty/2. r"
+var message ="blkC3 XiPty/2. r"
 var plaintext = "";
 
 var clockwise = false;
